@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="https://liloubooks.com/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<title>מאסטר קלאס לילו בוקס</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Suez+One&display=swap">
+<style>
+/* Layout: one soft paper card on a blush ground, page edges cut like folded book pages */
+:root {
+  --bg: #FFF4F1;
+  --card: #FFFFFF;
+  --ink: #4A2C17;
+  --ink-soft: #6E5646;
+  --pink: #E85A7E;
+  --pink-soft: #FFE3EA;
+  --gold: #F5C451;
+  --line: #EED9D2;
+  --field: #FFFBFA;
+  --ok: #1F6B4F;
+  --err: #C0392B;
+  --font-display: "Suez One", "Assistant", Georgia, serif;
+  --font-body: "Assistant", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1E1613; --card: #2A201C; --ink: #F6E7DE; --ink-soft: #CDB8AB;
+    --pink: #FF7F9E; --pink-soft: #3D2229; --gold: #F5C451; --line: #4A3831;
+    --field: #241B18; --ok: #6FD3A6; --err: #FF8A7A; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1E1613; --card: #2A201C; --ink: #F6E7DE; --ink-soft: #CDB8AB;
+  --pink: #FF7F9E; --pink-soft: #3D2229; --gold: #F5C451; --line: #4A3831;
+  --field: #241B18; --ok: #6FD3A6; --err: #FF8A7A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body);
+  font-size: 17px; line-height: 1.6; margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 48px;
+}
+.wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.brand { font-family: Georgia, serif; font-weight: 700; color: #87714E; letter-spacing: .02em; font-size: 1.15rem; text-align: center; }
+.hero { text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.eyebrow { background: var(--pink-soft); color: var(--pink); font-weight: 800; font-size: .9rem; padding: 4px 14px; border-radius: 999px; letter-spacing: .02em; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 6vw, 2.6rem); line-height: 1.2; margin: 0; text-wrap: balance; }
+.lead { color: var(--ink-soft); margin: 0; max-width: 34em; text-wrap: pretty; }
+
+/* page-edge strip: tiny folded pages */
+.pages { display: flex; justify-content: center; gap: 3px; height: 26px; align-items: flex-end; }
+.pages span { width: 4px; background: var(--gold); border-radius: 2px 2px 0 0; opacity: .85; }
+
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.fact { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 8px; text-align: center; }
+.fact b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; color: var(--pink); line-height: 1.2; }
+.fact small { color: var(--ink-soft); font-size: .9rem; }
+.incl { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.incl li { border: 1px dashed var(--line); border-radius: 999px; padding: 4px 12px; font-size: .95rem; color: var(--ink-soft); }
+
+form, .done { background: var(--card); border-radius: 22px; padding: 26px clamp(18px, 5vw, 32px); box-shadow: 0 10px 30px rgba(74,44,23,.08); display: flex; flex-direction: column; gap: 18px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+label, legend { font-weight: 700; font-size: 1rem; }
+.opt { font-weight: 400; color: var(--ink-soft); font-size: .88rem; }
+input[type=text], input[type=tel], textarea {
+  font: inherit; color: var(--ink); background: var(--field);
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; width: 100%;
+  transition: border-color .15s, box-shadow .15s;
+}
+textarea { min-height: 84px; resize: vertical; }
+input:focus, textarea:focus { outline: none; border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-soft); }
+input[type=tel] { direction: ltr; text-align: right; }
+.hint { font-size: .85rem; color: var(--ink-soft); }
+.error { font-size: .88rem; color: var(--err); font-weight: 600; }
+.invalid input, .invalid textarea { border-color: var(--err); }
+
+fieldset { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.avail { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: var(--field); border: 1.5px solid var(--line); border-radius: 14px; padding: 10px 14px; }
+.avail.invalid { border-color: var(--err); }
+.avail legend { float: right; padding: 0; }
+.avail .when { display: flex; flex-direction: column; }
+.avail .when small { color: var(--ink-soft); font-size: .88rem; }
+.seg { display: flex; gap: 6px; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { font-weight: 700; padding: 6px 18px; border-radius: 999px; border: 1.5px solid var(--line); cursor: pointer; background: var(--card); transition: background .15s, color .15s, border-color .15s; }
+.seg input:checked + label { background: var(--pink); border-color: var(--pink); color: #fff; }
+.seg input:focus-visible + label { box-shadow: 0 0 0 3px var(--pink-soft); }
+
+.consent { display: flex; gap: 10px; align-items: flex-start; background: var(--pink-soft); border-radius: 14px; padding: 12px 14px; font-weight: 600; cursor: pointer; }
+.consent input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--pink); flex-shrink: 0; }
+.consent.invalid { outline: 1.5px solid var(--err); }
+
+button { font: inherit; font-weight: 800; font-size: 1.1rem; color: #fff; background: var(--pink); border: 0; border-radius: 999px; padding: 14px 24px; cursor: pointer; box-shadow: 0 8px 20px rgba(232,90,126,.3); transition: transform .15s, box-shadow .15s; }
+button:hover { transform: translateY(-2px); }
+button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+button:disabled { opacity: .6; cursor: wait; transform: none; }
+.formerr { text-align: center; }
+
+.done { text-align: center; align-items: center; }
+.done h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.8rem; margin: 0; color: var(--pink); }
+.done p { margin: 0; color: var(--ink-soft); }
+.foot { text-align: center; font-size: .9rem; color: var(--ink-soft); }
+
+@media (max-width: 480px) {
+  .row2 { grid-template-columns: 1fr; }
+  .facts { gap: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap" dir="rtl" lang="he">
+  <div class="brand">Lilou Books</div>
+
+  <header class="hero">
+    <span class="eyebrow">קבוצה קטנה · מספר מקומות מוגבל</span>
+    <h1>מאסטר קלאס בפיסול ספרים</h1>
+    <p class="lead">קורס של 6 מפגשים שעובר על כל הטכניקות של פיסול ספרים. בכל מפגש לומדות טכניקה חדשה, בין המפגשים יש שיעורי בית, ובסוף הקורס עורכות תערוכה משותפת. יוצאות מהקורס מקצועניות.</p>
+  </header>
+
+  <div class="pages" aria-hidden="true" id="pages"></div>
+
+  <div class="facts">
+    <div class="fact"><b>6</b><small>מפגשים</small></div>
+    <div class="fact"><b>3</b><small>שעות כל מפגש</small></div>
+    <div class="fact"><b>1</b><small>תערוכה בסיום</small></div>
+  </div>
+  <ul class="incl">
+    <li>טכניקה חדשה בכל מפגש</li>
+    <li>שיעורי בית בין המפגשים</li>
+    <li>תערוכת סיום</li>
+  </ul>
+
+  <form id="regForm" novalidate>
+    <div class="row2">
+      <div class="field" id="f-first">
+        <label for="firstName">שם פרטי</label>
+        <input type="text" id="firstName" name="firstName" autocomplete="given-name" required>
+      </div>
+      <div class="field" id="f-last">
+        <label for="lastName">שם משפחה</label>
+        <input type="text" id="lastName" name="lastName" autocomplete="family-name" required>
+      </div>
+    </div>
+
+    <div class="field" id="f-phone">
+      <label for="phone">טלפון</label>
+      <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="050-1234567" maxlength="16" required>
+      <span class="hint">מספר ישראלי בלבד, נייד או קווי</span>
+    </div>
+
+    <div class="field">
+      <label for="bookBg">רקע בפיסול ספרים <span class="opt">(אם יש)</span></label>
+      <textarea id="bookBg" name="bookBg" placeholder="למשל: השתתפתי בסדנה, אני מקפלת לבד בבית כבר שנה..."></textarea>
+    </div>
+
+    <div class="field">
+      <label for="artBg">רקע אומנותי</label>
+      <textarea id="artBg" name="artBg" placeholder="ציור, קרמיקה, תפירה, עיצוב... או בכלל לא, וזה גם מעולה"></textarea>
+    </div>
+
+    <fieldset class="avail" id="f-mon">
+      <legend class="when">זמינה בימי שני<small>16:00 עד 19:00</small></legend>
+      <div class="seg">
+        <input type="radio" id="mon-yes" name="monday" value="כן"><label for="mon-yes">כן</label>
+        <input type="radio" id="mon-no" name="monday" value="לא"><label for="mon-no">לא</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="avail" id="f-wed">
+      <legend class="when">זמינה בימי רביעי<small>16:00 עד 19:00</small></legend>
+      <div class="seg">
+        <input type="radio" id="wed-yes" name="wednesday" value="כן"><label for="wed-yes">כן</label>
+        <input type="radio" id="wed-no" name="wednesday" value="לא"><label for="wed-no">לא</label>
+      </div>
+    </fieldset>
+
+    <div class="field">
+      <label for="about">עוד מידע שאני רוצה להוסיף עליי <span class="opt">(לא חובה)</span></label>
+      <textarea id="about" name="about"></textarea>
+    </div>
+
+    <label class="consent" id="f-consent" for="consent">
+      <input type="checkbox" id="consent" name="consent" value="מאשרת">
+      <span>אני מאשרת שהפרטים שהעברתי נכונים ושאני מעוניינת להיכנס לקבוצת מאסטר בפיסול ספרים</span>
+    </label>
+
+    <p class="error formerr" id="formErr" hidden></p>
+    <button type="submit" id="submitBtn">שליחת ההרשמה</button>
+  </form>
+
+  <div class="done" id="done" hidden>
+    <h2>תודה, <span id="doneName"></span>!</h2>
+    <p>ההרשמה התקבלה. אחזור אלייך בקרוב עם כל הפרטים.</p>
+    <p id="demoNote" hidden>(זו תצוגה מקדימה, הפרטים לא נשמרו)</p>
+  </div>
+
+  <p class="foot">שאלות? hi@liloubooks.com</p>
+</div>
+
+<script>
+// Google Apps Script web-app URL (ends with /exec). Empty = preview mode.
+const SHEET_ENDPOINT = '';
+
+(function () {
+  const pages = document.getElementById('pages');
+  for (let i = 0; i < 31; i++) {
+    const s = document.createElement('span');
+    const t = Math.abs(15 - i) / 15;
+    s.style.height = (26 - 18 * t * t) + 'px';
+    pages.appendChild(s);
+  }
+})();
+
+const form = document.getElementById('regForm');
+const phone = document.getElementById('phone');
+
+// Allow only digits, +, - and spaces while typing
+phone.addEventListener('input', () => {
+  const clean = phone.value.replace(/[^\d+\- ]/g, '');
+  if (clean !== phone.value) phone.value = clean;
+});
+
+function normalizeIsraeliPhone(raw) {
+  let d = raw.replace(/[\s\-]/g, '');
+  if (d.startsWith('+972')) d = '0' + d.slice(4);
+  else if (d.startsWith('972')) d = '0' + d.slice(3);
+  if (d.startsWith('00')) d = d.slice(1);
+  // Mobile/VoIP 05X/07X (10 digits) or landline 02/03/04/08/09 (9 digits)
+  if (/^0(5\d|7[2-9])\d{7}$/.test(d) || /^0[23489]\d{7}$/.test(d)) return d;
+  return null;
+}
+
+function setError(id, msg) {
+  const box = document.getElementById(id);
+  box.classList.add('invalid');
+  let e = box.querySelector('.error');
+  if (!e) { e = document.createElement('span'); e.className = 'error'; box.appendChild(e); }
+  e.textContent = msg;
+}
+
+function clearErrors() {
+  document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+  form.querySelectorAll('.field .error, .avail .error').forEach(el => el.remove());
+  document.getElementById('formErr').hidden = true;
+}
+
+form.addEventListener('change', e => {
+  const box = e.target.closest('.invalid');
+  if (box) { box.classList.remove('invalid'); const er = box.querySelector('.error'); if (er) er.remove(); }
+});
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  clearErrors();
+  const v = n => (form.elements[n].value || '').trim();
+  let first = null;
+  const fail = (id, msg) => { setError(id, msg); first = first || id; };
+
+  if (!v('firstName')) fail('f-first', 'נא למלא שם פרטי');
+  if (!v('lastName')) fail('f-last', 'נא למלא שם משפחה');
+  const tel = normalizeIsraeliPhone(v('phone'));
+  if (!tel) fail('f-phone', 'נא להזין מספר טלפון ישראלי תקין, למשל 050-1234567');
+  if (!form.elements.monday.value) fail('f-mon', 'נא לבחור כן או לא');
+  if (!form.elements.wednesday.value) fail('f-wed', 'נא לבחור כן או לא');
+  if (!form.elements.consent.checked) fail('f-consent', '');
+
+  if (first) {
+    if (first === 'f-consent') {
+      const fe = document.getElementById('formErr');
+      fe.textContent = 'כדי להירשם צריך לסמן את האישור בסוף הטופס';
+      fe.hidden = false;
+    }
+    document.getElementById(first).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const data = new URLSearchParams({
+    firstName: v('firstName'),
+    lastName: v('lastName'),
+    phone: tel,
+    bookBg: v('bookBg'),
+    artBg: v('artBg'),
+    monday: form.elements.monday.value,
+    wednesday: form.elements.wednesday.value,
+    about: v('about'),
+    consent: 'מאשרת'
+  });
+
+  const btn = document.getElementById('submitBtn');
+  const preview = !SHEET_ENDPOINT;
+  if (preview && /liloubooks\.com$/.test(location.hostname)) {
+    const fe = document.getElementById('formErr');
+    fe.textContent = 'ההרשמה נפתחת ממש בקרוב. בינתיים אפשר לכתוב לנו ל-hi@liloubooks.com';
+    fe.hidden = false;
+    return;
+  }
+  if (!preview) {
+    btn.disabled = true; btn.textContent = 'שולחת...';
+    try {
+      await fetch(SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', body: data });
+    } catch (err) {
+      btn.disabled = false; btn.textContent = 'שליחת ההרשמה';
+      const fe = document.getElementById('formErr');
+      fe.textContent = 'השליחה לא הצליחה. בדקי את החיבור לאינטרנט ונסי שוב.';
+      fe.hidden = false;
+      return;
+    }
+  }
+  document.getElementById('doneName').textContent = v('firstName');
+  document.getElementById('demoNote').hidden = !preview;
+  form.hidden = true;
+  document.getElementById('done').hidden = false;
+  document.getElementById('done').scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+</script>
+
+</body>
+</html>
