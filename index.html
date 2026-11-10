@@ -55,9 +55,8 @@ body {
 h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 6vw, 2.6rem); line-height: 1.2; margin: 0; text-wrap: balance; }
 .lead { color: var(--ink-soft); margin: 0; max-width: 34em; text-wrap: pretty; }
 
-/* page-edge strip: tiny folded pages */
-.pages { display: flex; justify-content: center; gap: 3px; height: 26px; align-items: flex-end; }
-.pages span { width: 4px; background: var(--gold); border-radius: 2px 2px 0 0; opacity: .85; }
+.photo { margin: 0; }
+.photo img { display: block; width: 100%; height: auto; border-radius: 22px; box-shadow: 0 10px 30px rgba(74,44,23,.12); }
 
 .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .fact { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 8px; text-align: center; }
@@ -126,7 +125,9 @@ button:disabled { opacity: .6; cursor: wait; transform: none; }
     <p class="lead">קורס של 6 מפגשים שעובר על כל הטכניקות של פיסול ספרים. בכל מפגש לומדות טכניקה חדשה, בין המפגשים יש שיעורי בית, ובסוף הקורס עורכות תערוכה משותפת. יוצאות מהקורס מקצועניות.</p>
   </header>
 
-  <div class="pages" aria-hidden="true" id="pages"></div>
+  <figure class="photo">
+    <img src="masterclass-hero.jpg" alt="ספר מקופל בטכניקת פיסול ספרים, שבדפיו מופיע דיוקן של זוג" width="1000" height="843">
+  </figure>
 
   <div class="facts">
     <div class="fact"><b>6</b><small>מפגשים</small></div>
@@ -209,16 +210,6 @@ button:disabled { opacity: .6; cursor: wait; transform: none; }
 <script>
 // Google Apps Script web-app URL (ends with /exec). Empty = preview mode.
 const SHEET_ENDPOINT = '';
-
-(function () {
-  const pages = document.getElementById('pages');
-  for (let i = 0; i < 31; i++) {
-    const s = document.createElement('span');
-    const t = Math.abs(15 - i) / 15;
-    s.style.height = (26 - 18 * t * t) + 'px';
-    pages.appendChild(s);
-  }
-})();
 
 const form = document.getElementById('regForm');
 const phone = document.getElementById('phone');
