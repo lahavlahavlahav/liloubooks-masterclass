@@ -203,7 +203,6 @@ button:disabled { opacity: .6; cursor: wait; transform: none; }
   <div class="done" id="done" hidden>
     <h2>תודה, <span id="doneName"></span>!</h2>
     <p>ההרשמה התקבלה. אחזור אלייך בקרוב עם כל הפרטים.</p>
-    <p id="demoNote" hidden>(זו תצוגה מקדימה, הפרטים לא נשמרו)</p>
   </div>
 
   <a class="wa" href="https://wa.me/972502534643?text=%D7%94%D7%99%D7%99%20%D7%9C%D7%94%D7%91%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94%20%D7%A2%D7%9C%20%D7%94%D7%9E%D7%90%D7%A1%D7%98%D7%A8%20%D7%A7%D7%9C%D7%90%D7%A1" target="_blank" rel="noopener">
@@ -215,8 +214,8 @@ button:disabled { opacity: .6; cursor: wait; transform: none; }
 </div>
 
 <script>
-// Google Apps Script web-app URL (ends with /exec). Empty = preview mode.
-const SHEET_ENDPOINT = '';
+// Formspree form: every signup is emailed to the owner.
+const FORM_ENDPOINT = 'https://formspree.io/f/mzzjvvqv';
 
 const form = document.getElementById('regForm');
 const phone = document.getElementById('phone');
@@ -281,40 +280,38 @@ form.addEventListener('submit', async e => {
     return;
   }
 
-  const data = new URLSearchParams({
-    firstName: v('firstName'),
-    lastName: v('lastName'),
-    phone: tel,
-    bookBg: v('bookBg'),
-    artBg: v('artBg'),
-    monday: form.elements.monday.value,
-    wednesday: form.elements.wednesday.value,
-    about: v('about'),
-    consent: 'מאשרת'
-  });
+  const data = {
+    _subject: `הרשמה למאסטר קלאס - ${v('firstName')} ${v('lastName')}`,
+    'שם פרטי': v('firstName'),
+    'שם משפחה': v('lastName'),
+    'טלפון': tel,
+    'רקע בקיפול ספרים': v('bookBg'),
+    'רקע באמנות': v('artBg'),
+    'ימי שני': form.elements.monday.value,
+    'ימי רביעי': form.elements.wednesday.value,
+    'קצת עליי': v('about'),
+    'אישור': 'מאשרת'
+  };
 
   const btn = document.getElementById('submitBtn');
-  const preview = !SHEET_ENDPOINT;
-  if (preview && /liloubooks\.com$/.test(location.hostname)) {
-    const fe = document.getElementById('formErr');
-    fe.textContent = 'ההרשמה נפתחת ממש בקרוב. בינתיים אפשר לכתוב לי בוואטסאפ';
+  const fe = document.getElementById('formErr');
+  btn.disabled = true; btn.textContent = 'שולחת...';
+  let ok = false;
+  try {
+    const res = await fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(data)
+    });
+    ok = res.ok;
+  } catch (err) {}
+  if (!ok) {
+    btn.disabled = false; btn.textContent = 'שליחת ההרשמה';
+    fe.textContent = 'השליחה לא הצליחה. בדקי את החיבור לאינטרנט ונסי שוב.';
     fe.hidden = false;
     return;
   }
-  if (!preview) {
-    btn.disabled = true; btn.textContent = 'שולחת...';
-    try {
-      await fetch(SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', body: data });
-    } catch (err) {
-      btn.disabled = false; btn.textContent = 'שליחת ההרשמה';
-      const fe = document.getElementById('formErr');
-      fe.textContent = 'השליחה לא הצליחה. בדקי את החיבור לאינטרנט ונסי שוב.';
-      fe.hidden = false;
-      return;
-    }
-  }
   document.getElementById('doneName').textContent = v('firstName');
-  document.getElementById('demoNote').hidden = !preview;
   form.hidden = true;
   document.getElementById('done').hidden = false;
   document.getElementById('done').scrollIntoView({ behavior: 'smooth', block: 'center' });
